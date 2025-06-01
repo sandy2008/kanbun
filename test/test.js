@@ -104,8 +104,8 @@ function testCodeGenerator() {
             shouldContain: 'let 甲 = 5;'
         },
         {
-            input: '書「世界您好」。',
-            shouldContain: '書("世界您好");'
+            input: '書「世界ニ向カヒテ曰ク、幸イアレ。」。',
+            shouldContain: '書("世界ニ向カヒテ曰ク、幸イアレ。");'
         }
     ];
     

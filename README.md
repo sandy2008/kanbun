@@ -126,8 +126,154 @@ Kanbun is poetic, minimalist, and historically flavored — a blend of ancient l
 
 ---
 
+## **Installation & Usage**
+
+### **Prerequisites**
+
+- Node.js (v14 or higher)
+- npm or yarn package manager
+
+### **Installation**
+
+Clone the repository and install dependencies:
+
+```bash
+git clone https://github.com/sandy2008/kanbun
+cd kanbun
+npm install
+```
+
+### **Basic Usage**
+
+#### **1. Command Line Interface**
+
+The Kanbun compiler provides several commands:
+
+```bash
+# Compile Kanbun source to JavaScript
+node src/cli.js compile examples/hello.kanbun
+
+# Compile with custom output file
+node src/cli.js compile examples/hello.kanbun -o hello.js
+
+# Compile and run immediately
+node src/cli.js run examples/hello.kanbun
+
+# Show compilation details (tokens, AST)
+node src/cli.js run examples/hello.kanbun --tokens --ast
+
+# Start interactive REPL
+node src/cli.js repl
+
+# Show help
+node src/cli.js help
+```
+
+#### **2. Using the Compiler Programmatically**
+
+```javascript
+const { KanbunCompiler } = require('./src/compiler');
+
+const compiler = new KanbunCompiler();
+
+// Compile code string
+const code = '昔有數曰「甲」、其値五。書甲。';
+const result = compiler.compile(code);
+
+if (result.success) {
+    console.log('Generated JavaScript:');
+    console.log(result.jsCode);
+}
+
+// Compile and run file
+compiler.runFile('examples/hello.kanbun');
+```
+
+#### **3. Example Programs**
+
+The `examples/` directory contains several demonstration programs:
+
+```bash
+# Hello World with variables
+node src/cli.js run examples/hello.kanbun
+
+# Conditional statements
+node src/cli.js run examples/conditional.kanbun
+
+# Function definitions and calls
+node src/cli.js run examples/functions.kanbun
+
+# FizzBuzz algorithm
+node src/cli.js run examples/fizzbuzz.kanbun
+```
+
+#### **4. Writing Your First Kanbun Program**
+
+Create a file `my_program.kanbun`:
+
+```kanbun
+// Variable declaration
+昔有數曰「年齡」、其値二十五。
+昔有言曰「姓名」、其値「李白」。
+
+// Print values
+書「姓名：」。
+書姓名。
+書「年齡：」。
+書年齡。
+
+// Conditional logic
+若年齡大於十八、書「成年人」。
+否、書「未成年」。
+```
+
+Compile and run:
+
+```bash
+node src/cli.js run my_program.kanbun
+```
+
+#### **5. Interactive REPL**
+
+Start the interactive REPL for experimentation:
+
+```bash
+node src/cli.js repl
+```
+
+Example REPL session:
+
+```
+kanbun> 昔有數曰「甲」、其値三。
+kanbun> 昔有數曰「乙」、其値四。
+kanbun> 書甲加乙。
+7
+kanbun> exit
+```
+
+### **Testing**
+
+Run the test suite to verify installation:
+
+```bash
+# Run unit tests
+npm test
+
+# Run all example programs
+node examples/run.js
+
+# Run specific tests
+node test/test.js
+```
+
+### **Language Reference**
+
+For detailed syntax and grammar rules, see the examples above or explore the `examples/` directory for working code samples.
+
+---
+
 ## **Possible Extensions**
 
-* **Kanbun-to-JS Transpiler**
+* **Kanbun-to-JS Transpiler** ✅ (Completed)
 * **VSCode plugin with kanbun-themed fonts**
 * **Online REPL that displays vertical-scroll style code rendering**

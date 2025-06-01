@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>漢文 (Kanbun) - 古典中国語風プログラミング言語</title>
+    <meta name="description" content="Classical Chinese-inspired programming language that combines ancient literary aesthetics with modern programming semantics">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600;700;900&family=Noto+Sans+JP:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a1a2e">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-kanji">漢文</div>
+            <div class="loading-text">Loading...</div>
+            <div class="loading-progress">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <button id="lang-ja" class="lang-btn active" data-lang="ja">日本語</button>
+        <button id="lang-en" class="lang-btn" data-lang="en">English</button>
+    </div>
+
+    <!-- Background Effects -->
+    <div class="background-effects">
+        <div class="floating-particles"></div>
+        <canvas id="matrix-canvas" class="matrix-rain"></canvas>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="brand-kanji">漢文</span>
+                <div class="brand-info">
+                    <span class="brand-name">Kanbun</span>
+                    <span class="brand-version">v1.0.0</span>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="#home" class="nav-link active" data-ja="ホーム" data-en="Home">ホーム</a>
+                <a href="#features" class="nav-link" data-ja="特徴" data-en="Features">特徴</a>
+                <a href="#playground" class="nav-link" data-ja="プレイグラウンド" data-en="Playground">プレイグラウンド</a>
+                <a href="#examples" class="nav-link" data-ja="例" data-en="Examples">例</a>
+                <a href="#docs" class="nav-link" data-ja="ドキュメント" data-en="Documentation">ドキュメント</a>
+                <a href="https://github.com/sandy2008/kanbun" class="nav-link github" target="_blank">
+                    <svg viewBox="0 0 24 24" width="20" height="20">
+                        <path fill="currentColor" d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    GitHub
+                </a>
+            </div>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">
+                    <span class="title-main">漢文</span>
+                    <span class="title-sub">Kanbun</span>
+                </h1>
+                <p class="hero-subtitle" data-ja="古典中国語風プログラミング言語" data-en="Classical Chinese-inspired Programming Language">古典中国語風プログラミング言語</p>
+                <p class="hero-description" 
+                   data-ja="古典漢文の美しさで現代プログラミングロジックを表現します。<br>文言文の伝統とプログラミング設計の精神を融合させています。" 
+                   data-en="Express modern programming logic with the beauty of classical Chinese literature.<br>Combining the tradition of classical Chinese with the spirit of programming design.">
+                    古典漢文の美しさで現代プログラミングロジックを表現します。<br>
+                    文言文の伝統とプログラミング設計の精神を融合させています。
+                </p>
+                <div class="hero-buttons">
+                    <a href="#playground" class="btn btn-primary" data-ja="今すぐ体験" data-en="Try Now">今すぐ体験</a>
+                    <a href="#docs" class="btn btn-secondary" data-ja="文法を学ぶ" data-en="Learn Syntax">文法を学ぶ</a>
+                </div>
+            </div>
+            <div class="hero-demo">
+                <div class="code-showcase">
+                    <div class="showcase-header">
+                        <span class="showcase-title" data-ja="FizzBuzz アルゴリズム" data-en="FizzBuzz Algorithm">FizzBuzz アルゴリズム</span>
+                        <div class="showcase-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                    </div>
+                    <pre class="showcase-code"><code class="language-kanbun">凡數一至二十、名曰「甲」、皆行如左：
+　若甲能整除三五、書「FizzBuzz」。
+　否、若甲能整除三、書「Fizz」。
+　否、若甲能整除五、書「Buzz」。
+　否、書甲。</code></pre>
+                    <div class="code-explanation">
+                        <span data-ja="1から20までの数をすべて繰り返し、3と5で割り切れる場合は「FizzBuzz」を出力" 
+                              data-en="Iterate through numbers 1 to 20, output 'FizzBuzz' if divisible by both 3 and 5">
+                            1から20までの数をすべて繰り返し、3と5で割り切れる場合は「FizzBuzz」を出力
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title" data-ja="言語の特徴" data-en="Language Features">言語の特徴</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">文</div>
+                    <h3 data-ja="文言文語法" data-en="Classical Chinese Syntax">文言文語法</h3>
+                    <p data-ja="古典中国語の語法構造を採用し、プログラムを詩のように優雅で詩的に表現します。" 
+                       data-en="Adopts classical Chinese grammatical structures, making programs elegant and poetic like classical literature.">
+                        古典中国語の語法構造を採用し、プログラムを詩のように優雅で詩的に表現します。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">智</div>
+                    <h3 data-ja="現代的セマンティクス" data-en="Modern Semantics">現代的セマンティクス</h3>
+                    <p data-ja="現代プログラミング言語の特性を組み合わせ、変数、関数、ループなどの完全な機能をサポートします。" 
+                       data-en="Combines modern programming language features, supporting variables, functions, loops, and other complete functionality.">
+                        現代プログラミング言語の特性を組み合わせ、変数、関数、ループなどの完全な機能をサポートします。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">美</div>
+                    <h3 data-ja="詩的プログラミング" data-en="Poetic Programming">詩的プログラミング</h3>
+                    <p data-ja="プログラムコードは古典文学のように詩として朗読でき、東洋美学を体現します。" 
+                       data-en="Program code can be recited as poetry like classical literature, embodying Eastern aesthetics.">
+                        プログラムコードは古典文学のように詩として朗読でき、東洋美学を体現します。
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">学</div>
+                    <h3 data-ja="教育的価値" data-en="Educational Value">教育的価値</h3>
+                    <p data-ja="漢字構造と論理表現を学び、文化継承とプログラミング教育を融合します。" 
+                       data-en="Learn Chinese character structure and logical expression, combining cultural heritage with programming education.">
+                        漢字構造と論理表現を学び、文化継承とプログラミング教育を融合します。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Documentation Section -->
+    <section id="docs" class="docs">
+        <div class="container">
+            <h2 class="section-title" data-ja="文法ドキュメント" data-en="Syntax Documentation">文法ドキュメント</h2>
+            <div class="docs-grid">
+                <div class="doc-section">
+                    <h3 data-ja="変数宣言" data-en="Variable Declaration">変数宣言</h3>
+                    <pre><code class="language-kanbun">昔有數曰「甲」、其値五。</code></pre>
+                    <p class="doc-translation">
+                        <em data-ja="昔、甲という名の数があり、その値は五である。" 
+                            data-en="Once there was a number called 'jia', whose value was five.">
+                            昔、甲という名の数があり、その値は五である。
+                        </em>
+                    </p>
+                </div>
+                <div class="doc-section">
+                    <h3 data-ja="条件文" data-en="Conditional Statement">条件文</h3>
+                    <pre><code class="language-kanbun">若甲大於乙、書「甲勝乙」。
+否、書「乙勝甲」。</code></pre>
+                    <p class="doc-translation">
+                        <em data-ja="もし甲が乙より大きければ「甲が乙に勝つ」と書き、そうでなければ「乙が甲に勝つ」と書く。" 
+                            data-en="If jia is greater than yi, write 'jia beats yi', otherwise write 'yi beats jia'.">
+                            もし甲が乙より大きければ「甲が乙に勝つ」と書き、そうでなければ「乙が甲に勝つ」と書く。
+                        </em>
+                    </p>
+                </div>
+                <div class="doc-section">
+                    <h3 data-ja="関数定義" data-en="Function Definition">関数定義</h3>
+                    <pre><code class="language-kanbun">夫「加」者、受「甲」「乙」、還甲加乙。</code></pre>
+                    <p class="doc-translation">
+                        <em data-ja="加法なるものは、甲と乙を受け取り、その和を返す。" 
+                            data-en="The addition function receives jia and yi, and returns their sum.">
+                            加法なるものは、甲と乙を受け取り、その和を返す。
+                        </em>
+                    </p>
+                </div>
+                <div class="doc-section">
+                    <h3 data-ja="ループ構造" data-en="Loop Structure">ループ構造</h3>
+                    <pre><code class="language-kanbun">凡數一至十、名曰「甲」、皆行如左：
+　書甲。</code></pre>
+                    <p class="doc-translation">
+                        <em data-ja="すべての数、一から十まで、これを甲と名づけ、みな左記のように実行する。" 
+                            data-en="For all numbers from one to ten, named 'jia', all execute as follows.">
+                            すべての数、一から十まで、これを甲と名づけ、みな左記のように実行する。
+                        </em>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Playground Section -->
+    <section id="playground" class="playground">
+        <div class="container">
+            <h2 class="section-title" data-ja="オンライン試験場" data-en="Online Playground">オンライン試験場</h2>
+            <div class="playground-container">
+                <div class="editor-panel">
+                    <div class="panel-header">
+                        <h3 data-ja="漢文プログラムコード" data-en="Kanbun Program Code">漢文プログラムコード</h3>
+                        <div class="editor-tools">
+                            <select id="example-select" class="example-select">
+                                <option value="" data-ja="例を選択..." data-en="Choose Example...">例を選択...</option>
+                                <option value="hello" data-ja="Hello World" data-en="Hello World">Hello World</option>
+                                <option value="fibonacci" data-ja="Fibonacci" data-en="Fibonacci">Fibonacci</option>
+                                <option value="fizzbuzz" data-ja="FizzBuzz" data-en="FizzBuzz">FizzBuzz</option>
+                                <option value="function" data-ja="関数例" data-en="Function Example">関数例</option>
+                            </select>
+                            <button id="run-btn" class="btn btn-run" data-ja="実行" data-en="Run">実行</button>
+                            <button id="clear-btn" class="btn btn-clear" data-ja="クリア" data-en="Clear">クリア</button>
+                        </div>
+                    </div>
+                    <textarea id="code-editor" class="code-editor" 
+                              data-ja-placeholder="ここに漢文プログラムコードを入力してください...&#10;例：&#10;昔有數曰「甲」、其値五。&#10;書甲。"
+                              data-en-placeholder="Enter Kanbun program code here...&#10;Example:&#10;昔有數曰「甲」、其値五。&#10;書甲。"
+                              placeholder="ここに漢文プログラムコードを入力してください...
+例：
+昔有數曰「甲」、其値五。
+書甲。"></textarea>
+                </div>
+                <div class="output-panel">
+                    <div class="panel-header">
+                        <h3 data-ja="実行結果" data-en="Execution Result">実行結果</h3>
+                        <div class="output-tools">
+                            <button id="clear-output-btn" class="btn btn-small" data-ja="出力をクリア" data-en="Clear Output">出力をクリア</button>
+                        </div>
+                    </div>
+                    <div id="output-container" class="output-container">
+                        <div class="output-placeholder" data-ja="プログラムコードを実行して結果を確認..." data-en="Run program code to see results...">
+                            プログラムコードを実行して結果を確認...
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="compilation-info">
+                <div class="info-tabs">
+                    <button class="tab-btn active" data-tab="javascript">JavaScript</button>
+                    <button class="tab-btn" data-tab="ast">AST</button>
+                    <button class="tab-btn" data-tab="tokens">Tokens</button>
+                </div>
+                <div class="tab-content">
+                    <div id="javascript-tab" class="tab-pane active">
+                        <pre><code id="js-output" class="language-javascript" 
+                                   data-ja="// 生成されたJavaScriptコードがここに表示されます" 
+                                   data-en="// Generated JavaScript code will be displayed here">// 生成されたJavaScriptコードがここに表示されます</code></pre>
+                    </div>
+                    <div id="ast-tab" class="tab-pane">
+                        <pre><code id="ast-output" class="language-json" 
+                                   data-ja="// AST構造がここに表示されます" 
+                                   data-en="// AST structure will be displayed here">// AST構造がここに表示されます</code></pre>
+                    </div>
+                    <div id="tokens-tab" class="tab-pane">
+                        <pre><code id="tokens-output" class="language-json" 
+                                   data-ja="// トークンシーケンスがここに表示されます" 
+                                   data-en="// Token sequence will be displayed here">// トークンシーケンスがここに表示されます</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Examples Section -->
+    <section id="examples" class="examples">
+        <div class="container">
+            <h2 class="section-title" data-ja="プログラム例" data-en="Program Examples">プログラム例</h2>
+            <div class="examples-grid">
+                <div class="example-card">
+                    <h3 data-ja="Hello World" data-en="Hello World">Hello World</h3>
+                    <pre><code class="language-kanbun">昔有言曰「挨拶」、其値「世界ニ向カヒテ曰ク、幸イアレ。」。
+書挨拶。</code></pre>
+                    <button class="btn btn-small load-example" data-example="hello" data-ja="例を読み込む" data-en="Load Example">例を読み込む</button>
+                </div>
+                <div class="example-card">
+                    <h3 data-ja="Fibonacci数列" data-en="Fibonacci Sequence">Fibonacci数列</h3>
+                    <pre><code class="language-kanbun">夫「Fibonacci」者、受「甲」、
+　若甲小於二、還甲。
+　否、還Fibonacci之甲減一與Fibonacci之甲減二之和。</code></pre>
+                    <button class="btn btn-small load-example" data-example="fibonacci" data-ja="例を読み込む" data-en="Load Example">例を読み込む</button>
+                </div>
+                <div class="example-card">
+                    <h3 data-ja="数学計算" data-en="Mathematical Calculation">数学計算</h3>
+                    <pre><code class="language-kanbun">昔有數曰「甲」、其値八。
+昔有數曰「乙」、其値五。
+若甲大於乙、書「甲大於乙」。
+否、書「乙大於甲」。</code></pre>
+                    <button class="btn btn-small load-example" data-example="math" data-ja="例を読み込む" data-en="Load Example">例を読み込む</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>漢文 Kanbun</h4>
+                    <p data-ja="古典中国語プログラミング言語、伝統文化と現代技術を融合。" 
+                       data-en="Classical Chinese programming language, blending traditional culture with modern technology.">
+                        古典中国語プログラミング言語、伝統文化と現代技術を融合。
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h4 data-ja="リソース" data-en="Resources">リソース</h4>
+                    <ul>
+                        <li><a href="#docs" data-ja="文法ドキュメント" data-en="Syntax Documentation">文法ドキュメント</a></li>
+                        <li><a href="#examples" data-ja="プログラム例" data-en="Program Examples">プログラム例</a></li>
+                        <li><a href="https://github.com/sandy2008/kanbun">GitHub</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 data-ja="コミュニティ" data-en="Community">コミュニティ</h4>
+                    <ul>
+                        <li><a href="https://github.com/sandy2008/kanbun/issues" data-ja="問題報告" data-en="Issue Reports">問題報告</a></li>
+                        <li><a href="https://github.com/sandy2008/kanbun/discussions" data-ja="ディスカッション" data-en="Discussions">ディスカッション</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p data-ja="&copy; 2025 Kanbun Project. 古雅な文で現代のロジックを書く。" 
+                   data-en="&copy; 2025 Kanbun Project. Writing modern logic with classical elegance.">&copy; 2025 Kanbun Project. 古雅な文で現代のロジックを書く。</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-ja="ヘルプ・ショートカット" data-en="Help & Shortcuts">ヘルプ・ショートカット</h2>
+                <button class="modal-close" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="help-section">
+                    <h3 data-ja="キーボードショートカット" data-en="Keyboard Shortcuts">キーボードショートカット</h3>
+                    <div class="shortcut-list">
+                        <div class="shortcut-item">
+                            <kbd>Ctrl</kbd> + <kbd>Enter</kbd>
+                            <span data-ja="コードを実行" data-en="Run code">コードを実行</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd>
+                            <span data-ja="エディタをクリア" data-en="Clear editor">エディタをクリア</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd>
+                            <span data-ja="コードを整形" data-en="Format code">コードを整形</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <kbd>Ctrl</kbd> + <kbd>1-3</kbd>
+                            <span data-ja="タブ切り替え" data-en="Switch tabs">タブ切り替え</span>
+                        </div>
+                        <div class="shortcut-item">
+                            <kbd>Esc</kbd>
+                            <span data-ja="通知を閉じる" data-en="Close notifications">通知を閉じる</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="help-section">
+                    <h3 data-ja="言語構文" data-en="Language Syntax">言語構文</h3>
+                    <div class="syntax-examples">
+                        <div class="syntax-item">
+                            <code>昔有数曰「甲」、其値五。</code>
+                            <span data-ja="変数宣言" data-en="Variable declaration">変数宣言</span>
+                        </div>
+                        <div class="syntax-item">
+                            <code>書「Hello World」。</code>
+                            <span data-ja="出力" data-en="Print output">出力</span>
+                        </div>
+                        <div class="syntax-item">
+                            <code>若甲大於乙、書「甲勝」。</code>
+                            <span data-ja="条件分岐" data-en="Conditional">条件分岐</span>
+                        </div>
+                        <div class="syntax-item">
+                            <code>夫「函数」者、受「引数」、還結果。</code>
+                            <span data-ja="関数定義" data-en="Function definition">関数定義</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="js/kanbun-compiler.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

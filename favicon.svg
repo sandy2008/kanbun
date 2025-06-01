@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B4513;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DAA520;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="45" fill="url(#grad)" stroke="#1a1a2e" stroke-width="2"/>
+  
+  <!-- 漢 character styled -->
+  <text x="50" y="65" font-family="serif" font-size="45" font-weight="bold" 
+        text-anchor="middle" fill="white" stroke="#1a1a2e" stroke-width="0.5">漢</text>
+</svg>
