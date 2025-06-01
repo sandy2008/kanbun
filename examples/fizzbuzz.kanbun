@@ -1,0 +1,4 @@
+// FizzBuzz implementation in Kanbun
+凡數一至二十、名曰「甲」、皆行如左：
+　若甲能整除三五、書「FizzBuzz」。
+　否、若甲能整除三、書「Fizz」。否、若甲能整除五、書「Buzz」。否、書甲。

@@ -1,0 +1,17 @@
+// Hello World example
+昔有言曰「問候」、其値「世界您好」。
+書「問候」。
+
+// Variable declaration and arithmetic
+昔有數曰「甲」、其値五。
+昔有數曰「乙」、其値三。
+昔有數曰「丙」。
+
+丙為甲加乙。
+書「甲加乙等於」。
+書丙。
+
+// Assignment
+甲今為十。
+書「甲現在是」。
+書甲。

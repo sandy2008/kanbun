@@ -1,0 +1,17 @@
+{
+  "name": "kanbun-compiler",
+  "version": "1.0.0",
+  "description": "A Classical Chinese-Inspired Programming Language Compiler",
+  "main": "src/compiler.js",
+  "scripts": {
+    "test": "node test/test.js",
+    "compile": "node src/compiler.js",
+    "example": "node examples/run.js"
+  },
+  "keywords": ["kanbun", "classical-chinese", "compiler", "esoteric-programming"],
+  "author": "Kanbun Team",
+  "license": "MIT",
+  "bin": {
+    "kanbun": "./src/cli.js"
+  }
+}
