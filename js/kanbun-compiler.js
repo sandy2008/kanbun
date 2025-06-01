@@ -681,15 +681,14 @@ class KanbunCompiler {
             case 'Identifier':
                 return node.name;
                 
-            case 'BinaryExpression':
-                const left = this.generateExpression(node.left);
-                const right = this.generateExpression(node.right);
-                return `${left} ${node.operator} ${right}`;
-                
             case 'CallExpression':
                 const callee = this.generateExpression(node.callee);
                 const args = node.arguments.map(arg => this.generateExpression(arg)).join(', ');
                 return `${callee}(${args})`;
+            case 'BinaryExpression':
+                const left = this.generateExpression(node.left);
+                const right = this.generateExpression(node.right);
+                return `(${left} ${node.operator} ${right})`;
                 
             case 'MemberExpression':
                 const obj = this.generateExpression(node.object);
