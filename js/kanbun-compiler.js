@@ -617,9 +617,9 @@ class KanbunCompiler {
                 const params = node.params.map(p => p.name).join(', ');
                 let body = '';
                 for (const stmt of node.body.body) {
-                    body += this.generateStatement(stmt) + ' ';
+                    body += this.generateStatement(stmt) + '\n';
                 }
-                return `function ${funcName}(${params}) { ${body} }`;
+                return `function ${funcName}(${params}) {\n${body}}`;
                 
             case 'ExpressionStatement':
                 return this.generateExpression(node.expression) + ';';
