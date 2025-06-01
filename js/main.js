@@ -60,6 +60,56 @@ class KanbunApp {
         console.log('Kanbun app initialized successfully');
     }
 
+    setupLoadingScreen() {
+        console.log('Setting up loading screen...');
+        // Multiple fallback mechanisms to ensure loading screen hides
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+            console.log('Loading screen element found');
+            const progressBar = loadingScreen.querySelector('.progress-bar');
+            
+            // Method 1: Immediate DOM ready check
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                console.log('DOM already ready, hiding loading screen immediately');
+                this.hideLoading();
+                return;
+            }
+            
+            // Method 2: Progressive loading animation
+            if (progressBar) {
+                console.log('Starting progress animation...');
+                setTimeout(() => {
+                    progressBar.style.width = '50%';
+                }, 200);
+                
+                setTimeout(() => {
+                    progressBar.style.width = '100%';
+                }, 800);
+                
+                setTimeout(() => {
+                    console.log('Progress complete, hiding loading screen');
+                    this.hideLoading();
+                }, 1200);
+            }
+            
+            // Method 3: Failsafe timeout (always triggers)
+            setTimeout(() => {
+                console.log('Failsafe timeout triggered');
+                this.hideLoading();
+            }, 2000);
+            
+            // Method 4: Window load event
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    console.log('Window load event triggered');
+                    this.hideLoading();
+                }, 300);
+            });
+        } else {
+            console.warn('Loading screen element not found!');
+        }
+    }
+
     setupLoading() {
         const loadingScreen = document.getElementById('loading-screen');
         if (loadingScreen) {
@@ -72,12 +122,21 @@ class KanbunApp {
     }
 
     hideLoading() {
+        console.log('hideLoading() called');
         const loadingScreen = document.getElementById('loading-screen');
-        if (loadingScreen) {
+        if (loadingScreen && loadingScreen.style.display !== 'none') {
+            console.log('Hiding loading screen...');
             loadingScreen.style.opacity = '0';
+            loadingScreen.style.transition = 'opacity 0.5s ease-out';
+            
             setTimeout(() => {
                 loadingScreen.style.display = 'none';
+                // Trigger any post-loading animations
+                document.body.classList.add('loaded');
+                console.log('Loading screen hidden successfully');
             }, 500);
+        } else {
+            console.log('Loading screen already hidden or not found');
         }
     }
 
@@ -508,6 +567,7 @@ class KanbunApp {
                 
                 // Execute the compiled JavaScript
                 if (result.javascript) {
+                    console.log('Generated JavaScript:', result.javascript);
                     this.executeJavaScript(result.javascript);
                 } else {
                     this.showOutput('编译失败：无法生成有效的JavaScript代码', 'error');
@@ -603,7 +663,7 @@ class KanbunApp {
             
             // Show output
             if (outputs.length > 0) {
-                this.showOutput(outputs.join('\\n'), 'success');
+                this.showOutput(outputs.join('\n'), 'success');
             } else {
                 this.showOutput('程序执行完成（无输出）', 'info');
             }
@@ -1048,11 +1108,59 @@ class KanbunApp {
             }
         }
     }
+
+    setupAnimations() {
+        // Set up all visual effects and animations
+        this.setupBackgroundEffects();
+        this.setupScrollEffects();
+        
+        // Ensure animations start after DOM is ready
+        setTimeout(() => {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.style.opacity = '1';
+            });
+        }, 100);
+    }
 }
 
 // Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new KanbunApp();
+    try {
+        const app = new KanbunApp();
+        console.log('Kanbun app created successfully');
+        
+        // Force hide loading screen after a short delay as fallback
+        setTimeout(() => {
+            const loadingScreen = document.getElementById('loading-screen');
+            if (loadingScreen && loadingScreen.style.display !== 'none') {
+                console.log('Forcing loading screen to hide');
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }
+        }, 2000);
+        
+    } catch (error) {
+        console.error('Error initializing Kanbun app:', error);
+        
+        // Hide loading screen even if there's an error
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+            loadingScreen.style.display = 'none';
+        }
+        
+        // Show error message to user
+        document.body.innerHTML += `
+            <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                        background: #f44336; color: white; padding: 20px; border-radius: 8px; z-index: 10000;">
+                <h3>Application Error</h3>
+                <p>Failed to initialize Kanbun app. Please refresh the page.</p>
+                <p><small>${error.message}</small></p>
+            </div>
+        `;
+    }
 });
 
 // Enhanced Prism.js support for Kanbun

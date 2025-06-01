@@ -507,7 +507,7 @@ class KanbunCompiler {
         let code = '';
         
         for (const statement of ast.body) {
-            code += this.generateStatement(statement) + '\\n';
+            code += this.generateStatement(statement) + '\n';
         }
         
         return code;
@@ -560,7 +560,13 @@ class KanbunCompiler {
         
         switch (node.type) {
             case 'Literal':
-                return typeof node.value === 'string' ? `"${node.value}"` : String(node.value);
+                if (typeof node.value === 'string') {
+                    // Escape special characters in strings
+                    const escaped = node.value.replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r');
+                    return `"${escaped}"`;
+                } else {
+                    return String(node.value);
+                }
                 
             case 'Identifier':
                 return node.name;

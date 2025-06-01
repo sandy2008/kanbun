@@ -410,5 +410,35 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="js/kanbun-compiler.js"></script>
     <script src="js/main.js"></script>
+    
+    <!-- Fallback script to hide loading screen -->
+    <script>
+        // Ensure loading screen is hidden after 4 seconds regardless of other issues
+        setTimeout(() => {
+            const loadingScreen = document.getElementById('loading-screen');
+            if (loadingScreen) {
+                console.log('Fallback: Hiding loading screen');
+                loadingScreen.style.opacity = '0';
+                loadingScreen.style.visibility = 'hidden';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }
+        }, 4000);
+        
+        // Also hide on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loadingScreen = document.getElementById('loading-screen');
+                if (loadingScreen && getComputedStyle(loadingScreen).display !== 'none') {
+                    console.log('Window load: Hiding loading screen');
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                    }, 500);
+                }
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
