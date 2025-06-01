@@ -211,6 +211,11 @@ class KanbunCompiler {
         if (token.value === '凡' || token.value.startsWith('凡')) {
             return this.parseForStatement();
         }
+
+        // Return statement: 還 X。
+        if (token.value === '還' || token.value.startsWith('還')) {
+            return this.parseReturnStatement();
+        }
         
         // Skip unknown tokens
         this.current++;
@@ -464,6 +469,34 @@ class KanbunCompiler {
         };
     }
 
+    parseReturnStatement() {
+        // Skip '還'
+        this.current++;
+        
+        // Get expression to return
+        const expr = this.parseExpression();
+        
+        // Skip to end of statement (optional, if return is always last)
+        while (this.current < this.tokens.length && this.tokens[this.current].value !== '。') {
+            // Allow expressions to consume tokens, but stop if a period is found that isn't part of the expression
+            if (this.tokens[this.current].type === 'PUNCTUATION' && this.tokens[this.current].value === '。') break;
+            // This part is tricky; for now, assume parseExpression consumes what it needs
+            // and the period is handled by the caller or statement terminator.
+            // If parseExpression stops prematurely, this loop might skip parts of a complex return expression.
+            // For simplicity, let's assume parseExpression handles its extent.
+            break; 
+        }
+        // Ensure period is consumed if it's the end of the return statement
+        if (this.current < this.tokens.length && this.tokens[this.current].value === '。') {
+            this.current++; // Skip '。'
+        }
+
+        return {
+            type: 'ReturnStatement',
+            argument: expr
+        };
+    }
+
     parseExpression() {
         if (this.current >= this.tokens.length) {
             return { type: 'Literal', value: null };
@@ -605,6 +638,8 @@ class KanbunCompiler {
     }
 
     generateStatement(node) {
+        if (!node) return ''; // Handle null nodes gracefully
+
         switch (node.type) {
             case 'VariableDeclaration':
                 const decl = node.declarations[0];
@@ -616,8 +651,10 @@ class KanbunCompiler {
                 const funcName = node.id.name;
                 const params = node.params.map(p => p.name).join(', ');
                 let body = '';
-                for (const stmt of node.body.body) {
-                    body += this.generateStatement(stmt) + '\n';
+                if (node.body && node.body.body) { // Ensure node.body.body exists
+                    for (const stmt of node.body.body) {
+                        body += this.generateStatement(stmt) + '\n';
+                    }
                 }
                 return `function ${funcName}(${params}) {\n${body}}`;
                 
@@ -631,7 +668,7 @@ class KanbunCompiler {
                     for (const stmt of node.consequent.body) {
                         consequent += this.generateStatement(stmt) + ' ';
                     }
-                } else {
+                } else if (node.consequent) { // Handle if consequent is a single statement not in a block
                     consequent = this.generateStatement(node.consequent);
                 }
                 let alternate = '';
@@ -640,7 +677,7 @@ class KanbunCompiler {
                         for (const stmt of node.alternate.body) {
                             alternate += this.generateStatement(stmt) + ' ';
                         }
-                    } else {
+                    } else { // Handle if alternate is a single statement not in a block
                         alternate = this.generateStatement(node.alternate);
                     }
                 }
