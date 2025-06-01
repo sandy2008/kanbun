@@ -35,7 +35,7 @@ class KanbunCompiler {
 
     tokenize(source) {
         const tokens = [];
-        const lines = source.split('\\n');
+        const lines = source.split('\n');
         
         for (let lineNum = 0; lineNum < lines.length; lineNum++) {
             const line = lines[lineNum].trim();
@@ -310,18 +310,43 @@ class KanbunCompiler {
             this.current++;
         }
         
-        // Skip to function body (after '還')
-        while (this.current < this.tokens.length && this.tokens[this.current].value !== '還') {
-            this.current++;
-        }
-        if (this.current < this.tokens.length) {
-            this.current++; // Skip '還'
-        }
+        // Parse function body - look for 若 (if) statements or 還 (return)
+        const bodyStatements = [];
         
-        // Parse simple return expression
-        let returnExpr = null;
-        if (this.current < this.tokens.length) {
-            returnExpr = this.parseExpression();
+        while (this.current < this.tokens.length) {
+            const token = this.tokens[this.current];
+            
+            if (token.value === '若') {
+                // Parse if statement
+                const ifStmt = this.parseIfStatement();
+                bodyStatements.push(ifStmt);
+            } else if (token.value === '否') {
+                // Parse else clause - find the 還 that follows
+                this.current++; // skip '否'
+                while (this.current < this.tokens.length && this.tokens[this.current].value !== '還') {
+                    this.current++;
+                }
+                if (this.current < this.tokens.length) {
+                    this.current++; // skip '還'
+                    const returnExpr = this.parseExpression();
+                    bodyStatements.push({
+                        type: 'ReturnStatement',
+                        argument: returnExpr
+                    });
+                }
+                break;
+            } else if (token.value === '還') {
+                // Direct return statement
+                this.current++; // skip '還'
+                const returnExpr = this.parseExpression();
+                bodyStatements.push({
+                    type: 'ReturnStatement',
+                    argument: returnExpr
+                });
+                break;
+            } else {
+                this.current++;
+            }
         }
         
         return {
@@ -330,9 +355,9 @@ class KanbunCompiler {
             params: params,
             body: {
                 type: 'BlockStatement',
-                body: [{
+                body: bodyStatements.length > 0 ? bodyStatements : [{
                     type: 'ReturnStatement',
-                    argument: returnExpr
+                    argument: { type: 'Literal', value: null }
                 }]
             }
         };
@@ -457,7 +482,19 @@ class KanbunCompiler {
         }
         
         if (token.type === 'IDENTIFIER') {
+            const identifierName = token.value;
             this.current++;
+            
+            // Check for function call with 之 syntax: Fibonacci之甲減一
+            if (this.current < this.tokens.length && this.tokens[this.current].value === '之') {
+                this.current++; // Skip '之'
+                const arg = this.parseExpression();
+                return {
+                    type: 'CallExpression',
+                    callee: { type: 'Identifier', name: identifierName },
+                    arguments: [arg]
+                };
+            }
             
             // Check for binary operations
             if (this.current < this.tokens.length) {
@@ -468,7 +505,7 @@ class KanbunCompiler {
                     return {
                         type: 'BinaryExpression',
                         operator: '>',
-                        left: { type: 'Identifier', name: token.value },
+                        left: { type: 'Identifier', name: identifierName },
                         right: right
                     };
                 } else if (nextToken.value === '小於') {
@@ -477,7 +514,16 @@ class KanbunCompiler {
                     return {
                         type: 'BinaryExpression',
                         operator: '<',
-                        left: { type: 'Identifier', name: token.value },
+                        left: { type: 'Identifier', name: identifierName },
+                        right: right
+                    };
+                } else if (nextToken.value === '等於') {
+                    this.current++;
+                    const right = this.parseExpression();
+                    return {
+                        type: 'BinaryExpression',
+                        operator: '===',
+                        left: { type: 'Identifier', name: identifierName },
                         right: right
                     };
                 } else if (nextToken.value === '加') {
@@ -486,13 +532,58 @@ class KanbunCompiler {
                     return {
                         type: 'BinaryExpression',
                         operator: '+',
-                        left: { type: 'Identifier', name: token.value },
+                        left: { type: 'Identifier', name: identifierName },
+                        right: right
+                    };
+                } else if (nextToken.value === '減') {
+                    this.current++;
+                    const right = this.parseExpression();
+                    return {
+                        type: 'BinaryExpression',
+                        operator: '-',
+                        left: { type: 'Identifier', name: identifierName },
+                        right: right
+                    };
+                } else if (nextToken.value === '乘') {
+                    this.current++;
+                    const right = this.parseExpression();
+                    return {
+                        type: 'BinaryExpression',
+                        operator: '*',
+                        left: { type: 'Identifier', name: identifierName },
+                        right: right
+                    };
+                } else if (nextToken.value === '與') {
+                    this.current++;
+                    const right = this.parseExpression();
+                    return {
+                        type: 'BinaryExpression',
+                        operator: '+',
+                        left: { type: 'Identifier', name: identifierName },
                         right: right
                     };
                 }
             }
             
-            return { type: 'Identifier', name: token.value };
+            return { type: 'Identifier', name: identifierName };
+        }
+        
+        // Handle numbers written in Chinese
+        if (token.value === '一') {
+            this.current++;
+            return { type: 'Literal', value: 1 };
+        } else if (token.value === '二') {
+            this.current++;
+            return { type: 'Literal', value: 2 };
+        } else if (token.value === '三') {
+            this.current++;
+            return { type: 'Literal', value: 3 };
+        } else if (token.value === '五') {
+            this.current++;
+            return { type: 'Literal', value: 5 };
+        } else if (token.value === '十') {
+            this.current++;
+            return { type: 'Literal', value: 10 };
         }
         
         this.current++;
@@ -524,7 +615,10 @@ class KanbunCompiler {
             case 'FunctionDeclaration':
                 const funcName = node.id.name;
                 const params = node.params.map(p => p.name).join(', ');
-                const body = this.generateStatement(node.body.body[0]);
+                let body = '';
+                for (const stmt of node.body.body) {
+                    body += this.generateStatement(stmt) + ' ';
+                }
                 return `function ${funcName}(${params}) { ${body} }`;
                 
             case 'ExpressionStatement':
@@ -532,8 +626,24 @@ class KanbunCompiler {
                 
             case 'IfStatement':
                 const test = this.generateExpression(node.test);
-                const consequent = this.generateStatement(node.consequent.body[0]);
-                const alternate = node.alternate ? this.generateStatement(node.alternate.body[0]) : '';
+                let consequent = '';
+                if (node.consequent && node.consequent.body) {
+                    for (const stmt of node.consequent.body) {
+                        consequent += this.generateStatement(stmt) + ' ';
+                    }
+                } else {
+                    consequent = this.generateStatement(node.consequent);
+                }
+                let alternate = '';
+                if (node.alternate) {
+                    if (node.alternate.body) {
+                        for (const stmt of node.alternate.body) {
+                            alternate += this.generateStatement(stmt) + ' ';
+                        }
+                    } else {
+                        alternate = this.generateStatement(node.alternate);
+                    }
+                }
                 return alternate ? 
                     `if (${test}) { ${consequent} } else { ${alternate} }` :
                     `if (${test}) { ${consequent} }`;

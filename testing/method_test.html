@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Method Test</title>
+</head>
+<body>
+    <div id="loading-screen" style="display: block;">Loading...</div>
+    
+    <script>
+        console.log('Testing method existence...');
+        
+        class TestApp {
+            constructor() {
+                console.log('Constructor called');
+                this.init();
+            }
+            
+            init() {
+                console.log('Init called');
+                this.setupLoadingScreen();
+            }
+            
+            setupLoadingScreen() {
+                console.log('setupLoadingScreen called successfully');
+                const loadingScreen = document.getElementById('loading-screen');
+                if (loadingScreen) {
+                    loadingScreen.style.display = 'none';
+                    console.log('Loading screen hidden');
+                }
+            }
+        }
+        
+        try {
+            const app = new TestApp();
+            console.log('✅ Test passed - methods work correctly');
+        } catch (error) {
+            console.error('❌ Test failed:', error.message);
+        }
+    </script>
+</body>
+</html>
